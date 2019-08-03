@@ -1,0 +1,29 @@
+#WordPress Database Migration Script in Microsoft Powershell
+#Guillermo Salazar
+#info@latinstartup.com
+ 
+#Credentials
+ 
+#New and Old URL
+$WordtoReplaceWith = 'localhost/hivrisks'
+$WordtoFind = '127.0.0.1/hivrisks'
+ 
+#Local Paths for the database Dumps
+$path = "C:\xampp\mysql\bin\Database.sql"
+$path2 = "C:\xampp\mysql\bin\DatabaseCopy.sql"
+ 
+$dbPassword = ""
+$dbName = "wp_hrrt"
+$dbUserName = "root"
+ 
+.\mysqldump -u root wp_hrrt > $path
+(Get-Content $path) -replace $WordtoFind, $WordtoReplaceWith | out-file $path2
+ 
+get-content $path2 | & "C:\xampp\mysql\bin\mysql.exe" -u $dbUserName --password=$dbPassword $dbName
+ 
+#Delete Files
+Remove-Item $path
+Remove-Item $path2
+ 
+#This is how this script should be run.
+#& "C:\xampp\mysql\bin\memo.ps1"
